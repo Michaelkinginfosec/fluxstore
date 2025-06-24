@@ -8,7 +8,7 @@ on:
       - main # or your deployment branch
 
 jobs:
-  build:
+  build-and-push:
     runs-on: ubuntu-latest
 
     steps:
@@ -17,6 +17,10 @@ jobs:
 
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Set up environment variables
+        run: |
+          echo "DATABASE_CONNECTION_STRING=${{ secrets.DATABASE_CONNECTION_STRING }}" >> fluxstore-backend/.env
 
       - name: Build Docker image
         run: docker build -t michaelkingsec/fluxstore-backend ./fluxstore-backend
