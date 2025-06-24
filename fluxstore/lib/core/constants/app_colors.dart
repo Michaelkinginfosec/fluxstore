@@ -10,4 +10,9 @@ class AppColors {
   static Color formBorderColor = Color.fromRGBO(214, 214, 214, 1);
   static Color grey = Colors.grey;
   static Color secondaryContainerColor = Color.fromRGBO(185, 185, 185, 1);
+  static Color selectedCategoryColor = Color.fromRGBO(58, 44, 39, 1);
+  static Color unSelectedCategoryColor = Color.fromRGBO(243, 243, 243, 1);
+  static Color categoryIconColor = Color.fromRGBO(157, 157, 157, 1);
+  static Color recommendedColor = Color.fromRGBO(249, 249, 249, 1);
+  static Color selectedSidebarColor = Color.fromRGBO(244, 245, 246, 1);
 }

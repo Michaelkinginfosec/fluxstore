@@ -7,4 +7,8 @@ class AppRoutes {
   static const String forgetpassword = '/forgetpassword';
   static const String createpassword = '/createpassword';
   static const String verification = '/verification';
+  static const String main = '/main';
+  static const String search = '/search';
+  static const String cart = '/cart';
+  static const String profile = '/profile';
 }

@@ -1,0 +1,25 @@
+services:
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - '27017:27017'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: Michaelking
+      MONGO_INITDB_ROOT_PASSWORD: Michaelkingsec.111
+    volumes:
+      - mongo_data:/data/db
+
+  backend:
+    build: .
+    container_name: fluxstore
+    ports:
+      - '3000:3000'
+    depends_on:
+      - mongodb
+    env_file:
+      - .env
+    command: npm run start:prod
+
+volumes:
+  mongo_data:

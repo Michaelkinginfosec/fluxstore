@@ -32,4 +32,52 @@ class AppStyle {
     fontSize: 12,
     color: AppColors.grey,
   );
+
+  static TextStyle appBarTitleStyle = TextStyle(
+    fontSize: 15.0,
+    fontWeight: FontWeight.bold,
+    color: AppColors.black,
+  );
+  static TextStyle selectedCategoryStyle = TextStyle(
+    fontSize: 10.0,
+    fontWeight: FontWeight.normal,
+    color: AppColors.selectedCategoryColor,
+  );
+  static TextStyle unSelectedCategoryStyle = TextStyle(
+    fontSize: 10.0,
+    fontWeight: FontWeight.normal,
+    color: AppColors.unSelectedCategoryColor,
+  );
+
+  static TextStyle imageTextStyle = TextStyle(
+    color: AppColors.backgroundColor,
+    fontWeight: FontWeight.bold,
+    fontSize: 22,
+  );
+  static TextStyle featureProductText = TextStyle(
+    color: AppColors.black,
+    fontWeight: FontWeight.bold,
+    fontSize: 20,
+  );
+
+  static TextStyle showAllText = TextStyle(
+    color: Color.fromRGBO(155, 155, 155, 1),
+    fontWeight: FontWeight.normal,
+    fontSize: 13,
+  );
+  static TextStyle productTitleText = TextStyle(
+    color: AppColors.black,
+    fontWeight: FontWeight.normal,
+    fontSize: 12,
+  );
+  static TextStyle smallBoldText = TextStyle(
+    color: AppColors.black,
+    fontWeight: FontWeight.bold,
+    fontSize: 12,
+  );
+  static TextStyle productPriceText = TextStyle(
+    color: AppColors.black,
+    fontWeight: FontWeight.bold,
+    fontSize: 16,
+  );
 }

@@ -1,0 +1,20 @@
+
+# FVM Version Cache
+.fvm/
+
+
+# Node.js
+/fluxstore-backend/node_modules/
+/fluxstore-backend/dist/
+*.log
+
+# Environment files
+/fluxstore-backend/.env
+
+# OS / IDE files
+/fluxstore-backend/.env.DS_Store
+/fluxstore-backend/.idea/
+/fluxstore-backend/.vscode/
+
+# Docker
+/fluxstore-backend/*.local

@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluxstore/core/config/routes/route_names.dart';
 import 'package:fluxstore/core/config/theme/app_style.dart';
 import 'package:fluxstore/core/constants/app_colors.dart';
 import 'package:fluxstore/core/constants/app_size.dart';
+import 'package:fluxstore/core/utils/snackbar_helper.dart';
+import 'package:fluxstore/feature/auth/presentation/blocs/remote/remote_auth_bloc/auth_remote_bloc.dart';
+import 'package:fluxstore/feature/auth/presentation/blocs/remote/remote_auth_bloc/auth_remote_event.dart';
+import 'package:fluxstore/feature/auth/presentation/blocs/remote/remote_auth_bloc/auth_remote_state.dart';
 import 'package:fluxstore/feature/auth/presentation/widgets/reset_password_field.dart';
 import 'package:fluxstore/feature/common/presentation/widgets/custom_app_bar.dart';
 import 'package:fluxstore/feature/common/presentation/widgets/custom_container.dart';
@@ -13,6 +18,7 @@ class ForgetPasswordScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController emailController = TextEditingController();
     return Scaffold(
       appBar: CustomAppBar(),
       body: Padding(
@@ -29,16 +35,43 @@ class ForgetPasswordScreen extends StatelessWidget {
               style: AppStyle.secondaryStyle,
             ),
             AppSize.kHeight50,
-            ResetPasswordField(),
+            ResetPasswordField(controller: emailController),
             AppSize.kHeight200,
             Align(
               alignment: Alignment.center,
-              child: CustomContainer(
-                onTap: () => context.push(AppRoutes.verification),
-                width: 147,
-                color: AppColors.primaryContainerColor,
-                title: "Send Code",
-                style: AppStyle.gemstoreSmallStyle,
+              child: BlocConsumer<AuthRemoteBloc, AuthRemoteState>(
+                listener: (context, state) {
+                  if (state is AuthRemoteSuccess) {
+                    CustomSnackbar.show(context, state.message);
+                    context.push(
+                      AppRoutes.verification,
+                      extra: emailController.text,
+                    );
+                  } else if (state is AuthRemoteFailure) {
+                    CustomSnackbar.show(context, state.error, isError: true);
+                  }
+                },
+                builder: (context, state) {
+                  return CustomContainer(
+                    onTap: () {
+                      if (emailController.text.isEmpty) {
+                        CustomSnackbar.show(
+                          context,
+                          "Please enter your email",
+                          isError: true,
+                        );
+                      }
+                      context.read<AuthRemoteBloc>().add(
+                        ForgotPasswordEventRequested(emailController.text),
+                      );
+                    },
+
+                    width: 147,
+                    color: AppColors.primaryContainerColor,
+                    title: "Send Code",
+                    style: AppStyle.gemstoreSmallStyle,
+                  );
+                },
               ),
             ),
           ],

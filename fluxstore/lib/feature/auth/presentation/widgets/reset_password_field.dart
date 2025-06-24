@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ResetPasswordField extends StatelessWidget {
-  const ResetPasswordField({super.key});
+  final TextEditingController? controller;
+  const ResetPasswordField({super.key, this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -13,6 +14,7 @@ class ResetPasswordField extends StatelessWidget {
         ],
       ),
       child: TextFormField(
+        controller: controller,
         decoration: InputDecoration(
           hintText: "enter your email here",
           prefixIcon: Image.asset("assets/images/email.png"),

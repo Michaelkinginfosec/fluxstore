@@ -9,6 +9,8 @@ class CreatePasswordForm extends StatelessWidget {
   final bool confirmPasswordObscureText;
   final void Function()? passwordTap;
   final void Function()? confirmPasswordTap;
+  final TextEditingController? passwordController;
+  final TextEditingController? confirmPasswordController;
   const CreatePasswordForm({
     super.key,
     required this.passwordSuffix,
@@ -17,6 +19,8 @@ class CreatePasswordForm extends StatelessWidget {
     required this.passwordObscureText,
     this.passwordTap,
     this.confirmPasswordTap,
+    required this.passwordController,
+    required this.confirmPasswordController,
   });
 
   @override
@@ -25,12 +29,14 @@ class CreatePasswordForm extends StatelessWidget {
       child: Column(
         children: [
           CustomeTextFormField(
+            controller: passwordController,
             hintText: "Password",
             suffix: GestureDetector(onTap: passwordTap, child: passwordSuffix),
             obscureText: passwordObscureText,
           ),
           AppSize.kHeight20,
           CustomeTextFormField(
+            controller: confirmPasswordController,
             hintText: "Confirm Password",
             suffix: GestureDetector(
               onTap: confirmPasswordTap,

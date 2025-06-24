@@ -44,9 +44,8 @@ class _OtpCountdownTimerState extends State<OtpCountdownTimer> {
 
   void _handleResend() {
     if (_canResend) {
-      widget
-          .onResend(); // call the injected function (from controller/presenter)
-      _startCountdown(); // restart countdown
+      widget.onResend();
+      _startCountdown();
     }
   }
 
@@ -58,7 +57,7 @@ class _OtpCountdownTimerState extends State<OtpCountdownTimer> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Row(
       children: [
         Text(
           _canResend

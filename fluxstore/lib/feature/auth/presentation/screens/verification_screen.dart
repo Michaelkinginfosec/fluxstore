@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluxstore/core/config/routes/route_names.dart';
 import 'package:fluxstore/core/config/theme/app_style.dart';
 import 'package:fluxstore/core/constants/app_colors.dart';
 import 'package:fluxstore/core/constants/app_size.dart';
+import 'package:fluxstore/core/utils/snackbar_helper.dart';
+import 'package:fluxstore/feature/auth/presentation/blocs/remote/remote_auth_bloc/auth_remote_bloc.dart';
+import 'package:fluxstore/feature/auth/presentation/blocs/remote/remote_auth_bloc/auth_remote_event.dart';
+import 'package:fluxstore/feature/auth/presentation/blocs/remote/remote_auth_bloc/auth_remote_state.dart';
 import 'package:fluxstore/feature/auth/presentation/widgets/otp_count_down_timer.dart';
 import 'package:fluxstore/feature/common/presentation/widgets/custom_app_bar.dart';
 import 'package:fluxstore/feature/common/presentation/widgets/custom_container.dart';
@@ -10,7 +15,8 @@ import 'package:fluxstore/feature/common/presentation/widgets/otp_input_field.da
 import 'package:go_router/go_router.dart';
 
 class VerificationScreen extends StatefulWidget {
-  const VerificationScreen({super.key});
+  final String email;
+  const VerificationScreen({super.key, required this.email});
 
   @override
   State<VerificationScreen> createState() => _VerificationScreenState();
@@ -44,38 +50,61 @@ class _VerificationScreenState extends State<VerificationScreen> {
                 width: 58,
                 height: 58,
                 borderRadius: BorderRadius.circular(50),
-                onCompleted: (otp) {
-                  print("Entered OTP: $otp");
-                },
               ),
+
               OtpCountdownTimer(
                 onResend: () {
-                  // ✅ Call your presenter / controller here
-                  // e.g., context.read<YourCubit>().resendOtp(phone);
-                  print('OTP resent to user');
+                  context.read<AuthRemoteBloc>().add(
+                    ForgotPasswordEventRequested(widget.email),
+                  );
                 },
               ),
               AppSize.kHeight150,
               Align(
                 alignment: Alignment.center,
-                child: CustomContainer(
-                  onTap: () => context.push(AppRoutes.createpassword),
-                  // onTap: () {
-                  //   final isComplete =
-                  //       _otpKey.currentState?.isOtpComplete() ?? false;
-                  //   final otp = _otpKey.currentState?.getOtpValue();
+                child: BlocConsumer<AuthRemoteBloc, AuthRemoteState>(
+                  listener: (context, state) {
+                    if (state is AuthRemoteSuccess) {
+                      CustomSnackbar.show(context, state.message);
+                      context.push(
+                        AppRoutes.createpassword,
+                        extra: widget.email,
+                      );
+                    } else if (state is AuthRemoteFailure) {
+                      CustomSnackbar.show(context, state.error, isError: true);
+                    }
+                  },
+                  builder: (context, state) {
+                    if (state is AuthRemoteLoading) {
+                      return const Center(
+                        child: CircularProgressIndicator.adaptive(),
+                      );
+                    }
+                    return CustomContainer(
+                      onTap: () {
+                        if (_otpKey.currentState?.getOtpValue().isEmpty ??
+                            true) {
+                          CustomSnackbar.show(
+                            context,
+                            "Please enter the OTP",
+                            isError: true,
+                          );
+                          return;
+                        }
+                        context.read<AuthRemoteBloc>().add(
+                          VerifyOtpEventRequested(
+                            widget.email,
+                            _otpKey.currentState?.getOtpValue() ?? '',
+                          ),
+                        );
+                      },
 
-                  //   if (!isComplete) {
-                  //     print('Please fill in all OTP fields.');
-                  //   } else {
-                  //     print('Submitting OTP: $otp');
-                  //     // Perform your API request here.
-                  //   }
-                  // },
-                  width: 147,
-                  color: AppColors.primaryContainerColor,
-                  title: "Submit",
-                  style: AppStyle.gemstoreSmallStyle,
+                      width: 147,
+                      color: AppColors.primaryContainerColor,
+                      title: "Submit",
+                      style: AppStyle.gemstoreSmallStyle,
+                    );
+                  },
                 ),
               ),
             ],
